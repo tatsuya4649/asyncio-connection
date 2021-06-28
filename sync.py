@@ -1,32 +1,20 @@
 import socket
 import time
+import blocking
+import elapse
+import const
 
-def blocking_get(site):
-	sock = socket.socket()
-	sock.connect((site,80))
-	request = f"GET / HTTP/1.0\r\nHost: {_SITE}\r\n\r\n"
-	sock.send(request.encode('ascii'))
-	response = b''
-	chunk = sock.recv(4096)
-	while chunk:
-		response += chunk
-		chunk = sock.recv(4096)
-	return response
-
-def sync_way(site):
+def sync_way(site,port,count):
 	res = []
-	for i in range(10):
-		res.append(blocking_get(site))
+	for i in range(count):
+		res.append(blocking.blocking_get(site,port))
 	return len(res)
 
+def sync_test(site,port,count):
+	@elapse.elapse(count)
+	def test():
+		sync_way(site,port,count)
+	test()
+
 if __name__ == "__main__":
-	_SITE = 'google.com'
-	_COUNT = 10
-	elapseds = 0
-	for _ in range(_COUNT):
-		start = time.time()
-		sync_way(_SITE)
-		elapsed = time.time() - start
-		elapseds += elapsed
-		print(f"elapsed_time=> {(elapsed):.2f}[sec]")
-	print(f"means time => {(elapseds)/_COUNT:.2f}[sec]")
+	sync_test(const._SITE,const._PORT,const._COUNT)

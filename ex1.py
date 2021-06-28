@@ -1,31 +1,23 @@
 import socket
 import time
+import blocking
 
-def blocking_get(site):
-	sock = socket.socket()
-	sock.connect((site,80))
-	request = f"GET / HTTP/1.0\r\nHost: {_SITE}\r\n\r\n"
-	sock.send(request.encode('ascii'))
-	response = b''
-	chunk = sock.recv(4096)
-	while chunk:
-		response += chunk
-		chunk = sock.recv(4096)
-	return response
-
-def sync_way(site):
+def sync_way(site,port):
 	res = []
 	for i in range(10):
-		res.append(blocking_get(site))
+		res.append(blocking.blocking_get(site,port))
 	return len(res)
 
 if __name__ == "__main__":
-	_SITE = 'google.com'
+	_SITE = 'www.google.com'
 	_COUNT = 10
+	_PORT = 80
 	elapseds = 0
+
+	print(blocking.blocking_get(_SITE,_PORT).decode('utf-8'))
 	for _ in range(_COUNT):
 		start = time.time()
-		sync_way(_SITE)
+		sync_way(_SITE,_PORT)
 		elapsed = time.time() - start
 		elapseds += elapsed
 		print(f"elapsed_time=> {(elapsed):.2f}[sec]")
