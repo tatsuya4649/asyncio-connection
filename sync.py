@@ -1,20 +1,24 @@
 import socket
 import time
-import blocking
-import elapse
+from blocking import blocking_get
+from nonblocking import nonblocking_get
+from elapse import elapse
 import const
 
-def sync_way(site,port,count):
+def sync_way(get,site,port,count):
 	res = []
 	for i in range(count):
-		res.append(blocking.blocking_get(site,port))
+		res.append(get(site,port))
 	return len(res)
 
-def sync_test(site,port,count):
-	@elapse.elapse(count)
+def sync_test(site,port,count,get=blocking_get):
+	@elapse(count)
 	def test():
-		sync_way(site,port,count)
+		sync_way(get,site,port,count)
 	test()
 
 if __name__ == "__main__":
-	sync_test(const._SITE,const._PORT,const._COUNT)
+	print("Blocking")
+	sync_test(site=const._SITE,port=const._PORT,count=const._COUNT,get=nonblocking_get)
+	print("NonBlocking")
+	sync_test(site=const._SITE,port=const._PORT,count=const._COUNT,get=blocking_get)
