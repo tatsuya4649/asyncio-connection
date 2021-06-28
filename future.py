@@ -59,6 +59,7 @@ class Crawler:
 
 		global stopped
 		while True:
+			print("helo")
 			f = Future()
 
 			def on_readable():
