@@ -2,6 +2,39 @@
 Socket Asynchronous I/O
 ----
 
+Socket Asynchronous I/O with Generator, use only 'Single Thread'.
+
 KeyWord
 ----
-Socket,Select(|Poll|Epoll),Generator,Coroutine
+Socket,Select(|Poll|Epoll),Generator,Future,Task,Event Loop,Coroutine,Native Coroutine
+
+What Select (selectors module)
+----
+Linux system call  for waiting Readable/Writable file.
+
+In Python, can call 'callback' when file be readble/writable.
+
+What Generator ≒ Coroutine
+----
+keyword `yield` in Python.
+
+Generator can resume and suspend.
+
+What Future
+----
+
+Future have state and result of generator.
+
+What Task
+----
+
+Task bind and manage coroutine.
+
+send() and throw(), communicate with another coroutine.
+
+What Event Loop
+----
+
+Like heart beat, blocking I/O and if file be readble/writable,
+
+call callback function. (In generally, only set result. Because of Task manage Coroutine)
